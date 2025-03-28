@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vero</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <div class="container">
@@ -14,7 +14,14 @@
         <div class="actions">
             <br />
             <br />
-            <a href="./blink.html" class="btn btn-primary">Enter Manual Session Key</a>
+            <p class="information-text"> If you landed here it was probably by accident, </p>
+            <p class="information-text"> you should have been redirected to our blink authentication page.</p>
+            <br />
+            <p> If you know your session key you can enter it below.</p>
+            <br />
+            <input type="text" id="session-key" placeholder="Enter 5-character hex code" maxlength="5">
+            <br />
+            <a href="./blink" class="btn btn-primary">Confirm Session Key</a>
         </div>
     </div>
 </body>

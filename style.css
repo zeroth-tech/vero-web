@@ -100,3 +100,18 @@ input {
 .vero-logo .logo-text {
     fill: var(--text-color);
 }
+
+.information-text {
+    color: #FFFACD;  /* Light yellow color */
+    font-style: italic;
+}
+
+#session-key::placeholder {
+    font-size: 14px;  /* Adjust this value as needed */
+    text-align: center;
+}
+
+#session-key {
+    width: 200px;  /* You can adjust this to ensure the input box is wide enough */
+    font-size: 16px;  /* This sets the size of the actual input text */
+}
