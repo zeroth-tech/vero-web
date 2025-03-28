@@ -1,20 +1,26 @@
-/* Import font */
+/* ==============================================
+   Font Import
+   ============================================== */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Outfit:wght@100..900&display=swap');
 
-/* Root variables */
+/* ==============================================
+   CSS Variables
+   ============================================== */
 :root {
-  --primary-color: #3399FF;
-  --background-color: #111;
-  --text-color: #fff;
-  --button-bg: #333;
-  --button-hover: #444;
+  --primary-color: #3399FF;    /* Main brand color */
+  --background-color: #111;    /* Dark background */
+  --text-color: #fff;         /* Light text */
+  --button-bg: #333;          /* Default button background */
+  --button-hover: #444;       /* Button hover state */
 }
 
-/* Base styles */
+/* ==============================================
+   Reset & Base Styles
+   ============================================== */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
@@ -23,6 +29,7 @@ body {
   color: var(--text-color);
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -114,4 +121,16 @@ input {
 #session-key {
     width: 200px;  /* You can adjust this to ensure the input box is wide enough */
     font-size: 16px;  /* This sets the size of the actual input text */
+    text-align: center;
+}
+
+#qr-code {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem auto;
+}
+
+#qr-code img {
+    margin: 0 auto;
 }

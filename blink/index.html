@@ -1,26 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tags for proper rendering and character encoding -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vero Blink Sequence</title>
+    <!-- Stylesheet and QR code library references -->
     <link rel="stylesheet" href="../style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-    <div class="container">
+    <!-- Logo section -->
+    <div id="logo-section" class="container">
         <img src="../assets/vero-logo.svg" alt="Vero Logo" class="vero-logo" />
+    </div>
+
+    <!-- Main content container -->
+    <div class="container">
+        <!-- Blink sequence instructions and controls -->
         <div id="text-section" class="container">
             <h1>Live Session Key Blink Sequence</h1> <br />
-
+            <!-- User instructions -->
             <p class="information-text"> Click the button below then hold your phone near the side of your face </p>
             <p class="information-text"> as if you were making a phone call. </p>
             <br />
+            <!-- Blink controls -->
             <button class="btn btn-primary" id="start-btn">Start Blinking</button> <br />
             <br />
-           
         </div>
+        <!-- Stop button (hidden by default) -->
         <button class="btn btn-primary" id="stop-btn" style="display: none;">Stop Blinking</button>
     </div>
+
+    <!-- QR code section for desktop users (hidden by default) -->
+    <div id="qr-section" class="container" style="display: none;">
+        <h2>Mobile Access Required</h2>
+        <p class="information-text">Please scan this QR code with your mobile device to continue:</p>
+        <br />
+        <div id="qr-code" class="container"></div>
+    </div>
+
+    <!-- JavaScript reference -->
     <script src="../script.js"></script>
 </body>
 </html>
