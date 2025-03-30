@@ -9,6 +9,13 @@ const textSection = document.getElementById('text-section');          // Contain
 const qrSection = document.getElementById('qr-section');             // Container for QR code
 const qrCode = document.getElementById('qr-code');                   // QR code element
 const confirmSessionBtn = document.getElementById('confirm-session'); // Button to confirm session key
+const blinkRateSelect = document.getElementById('blink-rate'); // New element
+const smsNumberInput = document.getElementById('sms-number');   // New element
+const smsLink = document.getElementById('sms-link');         // New element
+const emailForm = document.getElementById('email-form');       // New element
+const emailAddressInput = document.getElementById('email-address'); // New element
+const emailSessionKeyInput = document.getElementById('email-session-key'); // New element
+const emailBlinkRateInput = document.getElementById('email-blink-rate'); // New element
 
 // ==============================================
 // Global State Variables
@@ -168,6 +175,22 @@ if (confirmSessionBtn && sessionKeyInput) {
     });
 }
 
+// Add listeners only if the elements exist on the page
+if (sessionKeyInput) {
+    sessionKeyInput.addEventListener('input', updateSmsLink);
+}
+if (blinkRateSelect) {
+    blinkRateSelect.addEventListener('change', updateSmsLink); // Use 'change' for select elements
+}
+if (smsNumberInput) {
+    smsNumberInput.addEventListener('input', updateSmsLink);
+}
+if (emailForm) {
+    emailForm.addEventListener('submit', handleEmailFormSubmit);
+} else {
+    console.warn("Email form not found. Submission handling disabled.");
+}
+
 // ==============================================
 // Page Load Handler
 // ==============================================
@@ -223,5 +246,175 @@ window.addEventListener('load', () => {
         if (sessionKey) {
             startBlinking(sessionKey, blinkRate);
         }
+    }
+
+    // Set the initial SMS link based on default values when the page loads
+    updateSmsLink();
+});
+
+// --- Configuration ---
+// IMPORTANT: Replace this with the actual URL of your Vero Blink page
+const VERO_BLINK_BASE_URL = 'https://your-domain.com/verify-blink'; // MODIFY THIS
+// --- End Configuration ---
+
+// --- Functions ---
+
+/**
+ * Generates the full Vero Blink verification URL.
+ * @param {string} baseUrl - The base URL of the verification page.
+ * @param {string} sessionKey - The session key.
+ * @param {string} blinkRate - The blink rate.
+ * @returns {string} The complete verification URL.
+ */
+function generateVerificationLink(baseUrl, sessionKey, blinkRate) {
+    // Basic validation
+    if (!sessionKey || !blinkRate) {
+        console.warn("Session key or blink rate is missing for link generation.");
+        return ''; // Return empty if essential parts are missing
+    }
+    try {
+        const url = new URL(baseUrl);
+        url.searchParams.set('sessionKey', sessionKey);
+        url.searchParams.set('blinkRate', blinkRate);
+        return url.toString();
+    } catch (error) {
+        console.error("Error creating verification URL:", error);
+        return ''; // Return empty on error (e.g., invalid base URL)
+    }
+}
+
+/**
+ * Updates the href attribute of the SMS link based on current input values.
+ */
+function updateSmsLink() {
+    // Ensure all required elements exist before proceeding
+    if (!sessionKeyInput || !blinkRateSelect || !smsNumberInput || !smsLink) {
+        console.error("One or more elements required for SMS link are missing.");
+        return;
+    }
+
+    try {
+        const sessionKey = sessionKeyInput.value.trim();
+        const blinkRate = blinkRateSelect.value; // Get value from select
+        const phoneNumber = smsNumberInput.value.trim();
+        const verificationLink = generateVerificationLink(VERO_BLINK_BASE_URL, sessionKey, blinkRate);
+
+        // Disable link if essential info is missing or invalid
+        let isValid = true;
+        if (!verificationLink) {
+            isValid = false;
+        }
+
+        // Basic validation for phone number format (optional, adjust as needed)
+        if (!phoneNumber || !/^\+?[0-9\s\-()]+$/.test(phoneNumber)) {
+             // Optionally provide user feedback about invalid number
+             isValid = false;
+        }
+
+        if (isValid) {
+             smsLink.style.opacity = '1';
+             smsLink.style.cursor = 'pointer';
+             smsLink.classList.remove('disabled'); // Use a class for disabling style
+
+             const smsBody = `Click this link to verify liveness with Vero: ${verificationLink}`;
+             // Encode the body text for the SMS URL
+             smsLink.href = `sms:${phoneNumber.replace(/[\s\-()]/g, '')}?body=${encodeURIComponent(smsBody)}`; // Remove formatting chars for href
+        } else {
+             smsLink.removeAttribute('href'); // Disable link
+             smsLink.style.opacity = '0.6';
+             smsLink.style.cursor = 'not-allowed';
+             smsLink.classList.add('disabled'); // Add disabled class
+        }
+
+     } catch (error) {
+        console.error("Error updating SMS link:", error);
+        // Handle errors, e.g., disable the link or show a message
+        if (smsLink) {
+            smsLink.removeAttribute('href');
+            smsLink.style.opacity = '0.6';
+            smsLink.style.cursor = 'not-allowed';
+            smsLink.classList.add('disabled');
+        }
+    }
+}
+
+/**
+ * Updates hidden form fields before email form submission.
+ */
+function handleEmailFormSubmit(event) {
+    // Ensure all required elements exist
+     if (!sessionKeyInput || !blinkRateSelect || !emailSessionKeyInput || !emailBlinkRateInput || !emailAddressInput) {
+        console.error("One or more elements required for email submission are missing.");
+        event.preventDefault(); // Prevent submission if elements are missing
+        alert("Error: Cannot prepare email. Please check console.");
+        return;
+    }
+
+    // Update hidden fields with the current values from the visible inputs/select
+    const currentSessionKey = sessionKeyInput.value.trim();
+    const currentBlinkRate = blinkRateSelect.value;
+    const currentEmail = emailAddressInput.value.trim();
+
+    // Basic validation before setting hidden fields
+    if (!currentSessionKey || !currentBlinkRate || !currentEmail) {
+        event.preventDefault(); // Stop the form submission
+        alert("Please ensure Session Key, Blink Rate, and Email Address are provided.");
+        return;
+    }
+
+    emailSessionKeyInput.value = currentSessionKey;
+    emailBlinkRateInput.value = currentBlinkRate;
+
+    console.log(`Preparing to submit email form to ${event.target.action}`);
+    console.log(`Email: ${currentEmail}`);
+    console.log(`Session Key: ${emailSessionKeyInput.value}`);
+    console.log(`Blink Rate: ${emailBlinkRateInput.value}`);
+
+    // The form will now submit via standard HTML form submission.
+    // Actual email sending MUST be handled by your backend endpoint at '/send-email'.
+    // Consider adding a visual indicator that the form is submitting.
+}
+
+// Optional: Add a CSS class for disabled state if needed in style.css
+// .btn.disabled, .btn-secondary.disabled {
+//   opacity: 0.6;
+//   cursor: not-allowed;
+// } 
+
+document.addEventListener('DOMContentLoaded', () => {
+    const sessionKeyInput = document.getElementById('session-key');
+    const blinkRateSelect = document.getElementById('blink-rate');
+    const sendButton = document.getElementById('send-session-button');
+
+    if (sendButton && sessionKeyInput && blinkRateSelect) {
+        sendButton.addEventListener('click', () => {
+            const sessionKey = sessionKeyInput.value.trim();
+            const blinkRate = blinkRateSelect.value;
+
+            // Basic validation
+            if (!sessionKey) {
+                alert('Please enter a session key.');
+                sessionKeyInput.focus();
+                return;
+            }
+             if (sessionKey.length !== 5) { // Optional: Enforce length if needed
+                alert('Session key should be 5 characters.');
+                 sessionKeyInput.focus();
+                 return;
+             }
+            if (!blinkRate) {
+                alert('Please select a blink rate.');
+                blinkRateSelect.focus();
+                return;
+            }
+
+            // Construct the URL for the send page with query parameters
+            const sendUrl = `send.html?sessionKey=${encodeURIComponent(sessionKey)}&blinkRate=${encodeURIComponent(blinkRate)}`;
+
+            // Redirect the user
+            window.location.href = sendUrl;
+        });
+    } else {
+        console.error("Required elements (button, session key input, or blink rate select) not found on index.html");
     }
 }); 

@@ -4,35 +4,84 @@
     <!-- Meta tags for proper rendering and character encoding -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vero</title>
+    <title>Vero - Configure Session</title>
     <!-- Stylesheet reference -->
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <!-- Main container for landing page -->
+    <!-- Main container -->
     <div class="container">
         <!-- Header section -->
         <h1>Welcome to</h1>
         <img src="assets/vero-logo.svg" alt="Vero Logo" class="vero-logo" />
-        <p>real time peer-to-peer authentication</p>
+        <p>Real-time peer-to-peer authentication</p>
 
-        <!-- Session key input section -->
-        <div class="actions">
+        <!-- Configuration Section -->
+        <div class="config-section">
+            <h2 class="info-heading">Configure Session</h2>
             <br />
-            <br />
-            <!-- Information text for users -->
-            <p class="information-text"> If you landed here it was probably by accident, </p>
-            <p class="information-text"> you should have been redirected to our blink authentication page.</p>
-            <br />
-            <!-- Session key input form -->
-            <p> If you know your session key you can enter it below.</p>
-            <br />
-            <input type="text" id="session-key" placeholder="Enter 5-character hex code" maxlength="5">
-            <br />
-            <a href="#" id="confirm-session" class="btn btn-primary">Confirm Session Key</a>
+            <div>
+                <label for="session-key">Session Key:</label>
+                <input type="text" id="session-key" class="input-field" placeholder="Enter 5-character hex code" maxlength="5">
+            </div>
+
+            <div>
+                <label for="blink-rate">Blink Rate (ms):</label>
+                <select id="blink-rate" class="input-field" name="blinkRate">
+                    <option value="100">100 ms</option>
+                    <option value="200" selected>200 ms</option>
+                    <option value="300">300 ms</option>
+                </select>
+            </div>
+            <button id="send-session-button" class="btn btn-primary">Send Session Key</button>
         </div>
-    </div>
-    <!-- JavaScript reference -->
-    <script src="./script.js"></script>
+
+        <!-- Original Footer/Info Text -->
+        <div class="footer-info">
+             <br />
+             <p class="information-text"> If you landed here it was probably by accident, </p>
+             <p class="information-text"> you should have been redirected to our blink authentication page.</p>
+        </div>
+
+    </div> <!-- /container -->
+
+    <!-- Inline JavaScript for this page only -->
+    <script>
+        // Wait for DOM content to load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get references to elements
+            const sessionKeyInput = document.getElementById('session-key');
+            const blinkRateSelect = document.getElementById('blink-rate');
+            const sendButton = document.getElementById('send-session-button');
+
+            // Add click event to the Send button
+            sendButton.addEventListener('click', function() {
+                // Get input values
+                const sessionKey = sessionKeyInput.value.trim();
+                const blinkRate = blinkRateSelect.value;
+
+                // A) Validate session key (5 character hex code)
+                if (!sessionKey) {
+                    alert('Please enter a session key.');
+                    sessionKeyInput.focus();
+                    return;
+                }
+                
+                // Check if the key is 5 characters and a valid hex code
+                if (sessionKey.length !== 5 || !/^[0-9A-Fa-f]{5}$/.test(sessionKey)) {
+                    alert('Session key must be a 5-character hexadecimal code (0-9, A-F).');
+                    sessionKeyInput.focus();
+                    return;
+                }
+
+                // B) Generate the verification URL in the required format
+                // Note: The format is https://vero.zeroth.technology/blink?key=SESSION_KEY,blink_rate=BLINK_RATE
+                const verificationUrl = `https://vero.zeroth.technology/blink?key=${sessionKey},blink_rate=${blinkRate}`;
+
+                // C) Navigate to the send page with parameters
+                window.location.href = `send/index.html?sessionKey=${encodeURIComponent(sessionKey)}&blinkRate=${encodeURIComponent(blinkRate)}&verificationUrl=${encodeURIComponent(verificationUrl)}`;
+            });
+        });
+    </script>
 </body>
-</html> 
+</html>
