@@ -38,6 +38,242 @@
             width: 100%;
             max-width: 400px; /* Set a maximum width if needed */
         }
+        
+        /* Emphasize the session key */
+        label[for="session-key"] {
+            font-size: 1.1em;
+            color: #4a86e8; /* Blue to match your theme */
+            font-weight: 500;
+        }
+        
+        /* De-emphasize the secondary fields */
+        label[for="blink-rate"], 
+        label[for="key-type"] {
+            font-size: 0.9em;
+            color: #888;
+        }
+        
+        /* Style the secondary dropdowns */
+        #blink-rate, 
+        #key-type {
+            color: #666;
+            border-color: #ddd;
+            background-color: #fafafa;
+        }
+        
+        /* Style for the URL display */
+        .verification-url-display {
+            /* Existing styles... */
+        }
+        
+        /* Make all input elements the same height */
+        .input-field, 
+        select.input-field,
+        .compact-select {
+            height: 45px; /* Set a consistent height */
+            box-sizing: border-box; /* Include padding and border in the height */
+            padding: 8px 12px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        /* Ensure all form controls have consistent appearance across browsers */
+        input, select, button {
+            font-family: inherit;
+        }
+        
+        /* Fix for Safari and other browsers that render select elements differently */
+        select {
+            -webkit-appearance: none; /* Remove default styling in Safari */
+            -moz-appearance: none;    /* Remove default styling in Firefox */
+            appearance: none;         /* Standard syntax */
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 14 10'%3E%3Cpath fill='%23444' d='M1 3l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px; /* Make room for the arrow */
+        }
+        
+        /* Completely remove default browser arrow to prevent double arrows */
+        select::-ms-expand {
+            display: none; /* For IE/Edge */
+        }
+        
+        /* Remove the compact-select specific height since we now have a global rule */
+        .compact-select {
+            width: 100%;
+            font-family: inherit;
+            font-size: inherit;
+        }
+        
+        /* Mobile-friendly container widths */
+        .container {
+            max-width: 600px; /* Good overall container max width */
+            padding: 0 15px; /* Add padding for very small screens */
+            margin: 0 auto; /* Center the container */
+        }
+        
+        /* Adjust the table width for all screen sizes */
+        .config-section table {
+            margin: 0 auto;
+            width: 100%;
+            max-width: 400px; /* Good width for the form elements */
+            border-spacing: 0;
+            border-collapse: separate;
+        }
+        
+        /* Style the buttons for two-line text with less gap */
+        button.btn {
+            min-height: 60px; /* Increased height for two lines */
+            flex: 1; /* Have each button take up equal space */
+            min-width: 0; /* Remove the min-width restriction */
+            white-space: normal; /* Allow text to wrap */
+            padding: 10px 8px; /* Reduce horizontal padding slightly */
+            text-align: center; /* Center the text */
+            line-height: 1.2; /* Tighter line spacing */
+        }
+        
+        /* Style for the button text - remove the block display */
+        button.btn span {
+            line-height: 1.2; /* Tighter line spacing for spans */
+        }
+        
+        /* Add specific styling for the line break to reduce its height */
+        button.btn br {
+            display: block;
+            content: ""; /* Some browsers respect this */
+            margin: -2px 0; /* Negative margin to reduce space */
+            line-height: 0.8; /* Very tight line height */
+        }
+        
+        /* Make the button container match the table width */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 300px; /* Match the table's max-width */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Responsive adjustments for very small screens */
+        @media (max-width: 380px) {
+            /* Stack the buttons vertically on very small screens */
+            .button-container {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            button.btn {
+                width: 100%; /* Full width buttons on small screens */
+            }
+            
+            /* Reduce padding between columns on small screens */
+            td {
+                padding-right: 5px !important;
+                padding-left: 5px !important;
+            }
+        }
+        
+        /* Fix the dropdown styling issues */
+        select.compact-select {
+            /* Appearance */
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            
+            /* Border styling */
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            
+            /* Size and spacing */
+            width: 100%;
+            height: 45px;
+            padding: 8px 12px;
+            padding-right: 30px; /* Space for arrow */
+            
+            /* Text styling */
+            font-family: inherit;
+            font-size: 14px;
+            color: #999;
+            
+            /* Background and arrow */
+            background-color: #fafafa;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 14 10'%3E%3Cpath fill='%23444' d='M1 3l6 6 6-6'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 10px center !important;
+        }
+        
+        /* Override any global select styling that might be conflicting */
+        select {
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            border-radius: 4px;
+        }
+        
+        /* Additional browser compatibility */
+        select::-ms-expand {
+            display: none;
+        }
+        
+        /* Focus state styling */
+        select.compact-select:focus {
+            outline: none;
+            border-color: #4a86e8;
+            box-shadow: 0 0 0 2px rgba(74, 134, 232, 0.2);
+        }
+        
+        /* Match the placeholder style */
+        ::placeholder {
+            color: #999;
+            font-size: 14px;
+        }
+        
+        /* Ensure the session key input also uses the same font size */
+        #session-key {
+            font-size: 14px;
+        }
+        
+        /* Adjust padding to accommodate smaller text */
+        .input-field, select.compact-select {
+            padding: 10px 12px; /* Slightly more vertical padding for smaller text */
+        }
+        
+        /* Make dropdown option text match the dropdown itself */
+        select.compact-select option {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* De-emphasize the secondary fields even more */
+        label[for="blink-rate"], 
+        label[for="key-type"] {
+            font-size: 0.85em;
+            color: #999;
+        }
+        
+        /* De-emphasize the verification URL preview without a box */
+        #verification-url-preview {
+            color: #999; /* Light gray text */
+            font-size: 13px; /* Slightly smaller font */
+            font-family: monospace; /* Monospace font for code-like appearance */
+            word-break: break-all; /* Break URL at any character to prevent overflow */
+            margin-top: 5px;
+            /* Remove background and border */
+            background-color: transparent;
+            border: none;
+            padding: 0;
+        }
+        
+        /* Also de-emphasize the label */
+        #verification-url-preview-label {
+            color: #777;
+            font-size: 14px;
+            font-weight: normal;
+            margin-bottom: 2px;
+        }
     </style>
 </head>
 <body>
@@ -49,48 +285,62 @@
         <p>Real-time peer-to-peer authentication</p>
 
         <!-- Configuration Section -->
+         <br />
+        <h2 class="info-heading">Configure Liveness <br /> Verification</h2>
         <div class="config-section">
-            <h2 class="info-heading">Configure Session</h2>
-            <br />
-            <div>
-                <label for="session-key">Session Key:</label>
-                <input type="text" id="session-key" class="input-field" placeholder="Enter 5-character hex code" maxlength="5">
-            </div>
+            <table style="margin: 0 auto; width: 100%; max-width: 300px; border-spacing: 0; border-collapse: separate;">
+                <tr>
+                    <td colspan="2">
+                        <label for="session-key">Session Key:</label>
+                        <input type="text" id="session-key" class="input-field" placeholder="Enter 6-character hex code" maxlength="6">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%; padding-right: 10px;">
+                        <label for="blink-rate">Blink Rate:</label>
+                        <select id="blink-rate" class="compact-select" name="blinkRate">
+                            <option value="100">100 ms</option>
+                            <option value="200" selected>200 ms</option>
+                            <option value="300">300 ms</option>
+                        </select>
+                    </td>
+                    <td style="width: 50%; padding-left: 10px;">
+                        <label for="key-type">Key Type:</label>
+                        <select id="key-type" class="compact-select" name="keyType">
+                            <option value="s" selected>Session</option>
+                            <option value="m">Multiplier</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <p class="information-text"> Most of the time you shouldn't need to change these last two.</p>
+                        <br />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
 
-            <div class="inline-fields">
-                <div class="field-group">
-                    <label for="blink-rate">Blink Rate (ms):</label>
-                    <select id="blink-rate" class="input-field compact-select" name="blinkRate">
-                        <option value="100">100 ms</option>
-                        <option value="200" selected>200 ms</option>
-                        <option value="300">300 ms</option>
-                    </select>
-                </div>
-                
-                <div class="field-group">
-                    <label for="key-type">Key Type:</label>
-                    <select id="key-type" class="input-field compact-select" name="keyType">
-                        <option value="s" selected>Session Key</option>
-                        <option value="m">Multiplier</option>
-                    </select>
-                </div>
-            </div>
             
-            <!-- Add URL preview section -->
-            <div style="margin-top: 15px; margin-bottom: 15px;">
-                <p><strong>Verification URL:</strong></p>
+            <!-- URL preview section - de-emphasized -->
+            <div style="margin-top: 15px; margin-bottom: 15px; max-width: 300px; margin-left: auto; margin-right: auto;">
+                <p id="verification-url-preview-label"><strong>Verification URL:</strong></p>
                 <p id="verification-url-preview">https://vero.zeroth.technology/blink?key=XXXXX,blink_rate=200,type=s</p>
             </div>
             
-            <button id="send-session-button" class="btn btn-primary">Send Session Key</button>
+            <!-- Replace the single button with two buttons side by side -->
+            <div class="button-container">
+                <button id="sms-button" class="btn btn-primary">
+                    <span>Send Via</span><span style="font-size: 0.1em;"><br></span><span>SMS</span>
+                </button>
+                <button id="email-button" class="btn btn-primary">
+                    <span>Send Via</span><span style="font-size: 0.1em;"><br></span><span>Email</span>
+                </button>
+            </div>
         </div>
 
-        <!-- Original Footer/Info Text -->
-        <div class="footer-info">
-             <br />
-             <p class="information-text"> If you landed here it was probably by accident, </p>
-             <p class="information-text"> you should have been redirected to our blink authentication page.</p>
-        </div>
+        
 
     </div> <!-- /container -->
 
@@ -102,7 +352,8 @@
             const sessionKeyInput = document.getElementById('session-key');
             const blinkRateSelect = document.getElementById('blink-rate');
             const keyTypeSelect = document.getElementById('key-type');
-            const sendButton = document.getElementById('send-session-button');
+            const smsButton = document.getElementById('sms-button');
+            const emailButton = document.getElementById('email-button');
             const urlPreview = document.getElementById('verification-url-preview');
             
             // Function to update the URL preview
@@ -110,8 +361,16 @@
                 const sessionKey = sessionKeyInput.value.trim() || 'XXXXX';
                 const blinkRate = blinkRateSelect.value;
                 const keyType = keyTypeSelect.value;
-                const verificationUrl = `https://vero.zeroth.technology/blink?key=${sessionKey},blink_rate=${blinkRate},type=${keyType}`;
-                urlPreview.textContent = verificationUrl;
+                
+                // Create the URL with a line break after technology/
+                const baseUrl = 'https://vero.zeroth.technology/';
+                const params = `blink?key=${sessionKey},blink_rate=${blinkRate},type=${keyType}`;
+                
+                // Clear existing content and add the parts with a line break
+                urlPreview.innerHTML = baseUrl + '<br />' + params;
+                
+                // Return the full URL without the break for use in other functions
+                return baseUrl + params;
             }
             
             // Update preview on page load and when inputs change
@@ -120,32 +379,65 @@
             blinkRateSelect.addEventListener('change', updateUrlPreview);
             keyTypeSelect.addEventListener('change', updateUrlPreview);
 
-            // Add click event to the Send button
-            sendButton.addEventListener('click', function() {
-                // Get input values
+            // Validate session key
+            function validateSessionKey() {
                 const sessionKey = sessionKeyInput.value.trim();
-                const blinkRate = blinkRateSelect.value;
-                const keyType = keyTypeSelect.value;
-
-                // A) Validate session key (5 character hex code)
+                
                 if (!sessionKey) {
                     alert('Please enter a session key.');
                     sessionKeyInput.focus();
-                    return;
+                    return false;
                 }
                 
-                // Check if the key is 5 characters and a valid hex code
-                if (sessionKey.length !== 5 || !/^[0-9A-Fa-f]{5}$/.test(sessionKey)) {
-                    alert('Session key must be a 5-character hexadecimal code (0-9, A-F).');
+                // Check if the key is 6 characters and a valid hex code
+                if (sessionKey.length !== 6 || !/^[0-9A-Fa-f]{6}$/.test(sessionKey)) {
+                    alert('Session key must be a 6-character hexadecimal code (0-9, A-F).');
                     sessionKeyInput.focus();
-                    return;
+                    return false;
                 }
+                
+                return true;
+            }
 
-                // B) Generate the verification URL in the required format
-                const verificationUrl = `https://vero.zeroth.technology/blink?key=${sessionKey},blink_rate=${blinkRate},type=${keyType}`;
+            // Add click event to the SMS button
+            smsButton.addEventListener('click', function() {
+                if (!validateSessionKey()) return;
+                
+                // Get verification URL
+                const verificationUrl = updateUrlPreview();
+                
+                // Open SMS app with message containing the verification URL
+                const smsBody = `Click this link to verify liveness with Vero: ${verificationUrl}`;
+                const smsHref = `sms:?&body=${encodeURIComponent(smsBody)}`;
+                
+                // Log debug info
+                console.log('SMS button clicked');
+                console.log('Verification URL:', verificationUrl);
+                console.log('Full SMS href:', smsHref);
+                
+                // Open in new tab
+                window.open(smsHref, '_blank');
+            });
 
-                // C) Navigate to the send page with parameters
-                window.location.href = `send/index.html?sessionKey=${encodeURIComponent(sessionKey)}&blinkRate=${encodeURIComponent(blinkRate)}&keyType=${encodeURIComponent(keyType)}&verificationUrl=${encodeURIComponent(verificationUrl)}`;
+            // Add click event to the Email button
+            emailButton.addEventListener('click', function() {
+                if (!validateSessionKey()) return;
+                
+                // Get verification URL
+                const verificationUrl = updateUrlPreview();
+                
+                // Open email app with subject and body
+                const emailSubject = 'Vero Authentication Link';
+                const emailBody = `Click this link to verify liveness with Vero: ${verificationUrl}`;
+                const emailHref = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+                
+                // Log debug info
+                console.log('Email button clicked');
+                console.log('Verification URL:', verificationUrl);
+                console.log('Full Email href:', emailHref);
+                
+                // Open in new tab
+                window.open(emailHref, '_blank');
             });
         });
     </script>
