@@ -7,13 +7,24 @@
     <title>Vero - Configure Session</title>
     <!-- Stylesheet reference -->
     <link rel="stylesheet" href="./style.css">
+    <style>
+        /* Add cursor pointer to logo for better UX */
+        .vero-logo {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .vero-logo:hover {
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
     <!-- Main container -->
     <div class="container">
         <!-- Header section -->
         <h1>Welcome to</h1>
-        <img src="assets/vero-logo.svg" alt="Vero Logo" class="vero-logo" />
+        <img src="assets/vero-logo.svg" alt="Vero Logo" class="vero-logo" id="vero-logo" onclick="testVerification()"/>
         <p>Real-time peer-to-peer authentication</p>
 
         <!-- Configuration Section -->
@@ -57,6 +68,7 @@
             <p id="verification-url-preview-label"><strong>Verification URL:</strong></p>
             <p id="verification-url-preview">https://vero.zeroth.technology/blink?key=XXXXX,blink_rate=200,type=s</p>
         </div>
+    
         
         <!-- Buttons section -->
         <div class="button-container">
@@ -80,6 +92,46 @@
         // Constants
         // ==============================================
         const VERO_BLINK_BASE_URL = 'https://vero.zeroth.technology';
+        
+        // ==============================================
+        // Global Functions (available outside DOMContentLoaded)
+        // ==============================================
+        
+        /**
+         * Global function for testing verification via logo click
+         * Must be global as it's called directly from the HTML
+         */
+        function testVerification() {
+            const sessionKeyInput = document.getElementById('session-key');
+            const blinkRateSelect = document.getElementById('blink-rate');
+            const keyTypeSelect = document.getElementById('key-type');
+            
+            // Validate session key
+            const sessionKey = sessionKeyInput.value.trim();
+            if (!sessionKey) {
+                alert('Please enter a session key.');
+                sessionKeyInput.focus();
+                return;
+            }
+            
+            // Check if the key is 6 characters and a valid hex code
+            if (sessionKey.length !== 6 || !/^[0-9A-Fa-f]{6}$/.test(sessionKey)) {
+                alert('Session key must be a 6-character hexadecimal code (0-9, A-F).');
+                sessionKeyInput.focus();
+                return;
+            }
+            
+            // Get configuration values and build URL
+            const blinkRate = blinkRateSelect.value;
+            const keyType = keyTypeSelect.value;
+            
+            // Create the full verification URL
+            const verificationUrl = `${VERO_BLINK_BASE_URL}/blink?key=${sessionKey},blink_rate=${blinkRate},type=${keyType}`;
+            
+            // Navigate to the verification page
+            console.log("Testing verification with URL:", verificationUrl);
+            window.location.href = verificationUrl;
+        }
 
         // ==============================================
         // Document Ready Function
@@ -92,6 +144,7 @@
             const smsButton = document.getElementById('sms-button');
             const emailButton = document.getElementById('email-button');
             const urlPreview = document.getElementById('verification-url-preview');
+            const veroLogo = document.getElementById('vero-logo');
             
             // ==============================================
             // Core Functions
@@ -149,6 +202,9 @@
             sessionKeyInput.addEventListener('input', updateUrlPreview);
             blinkRateSelect.addEventListener('change', updateUrlPreview);
             keyTypeSelect.addEventListener('change', updateUrlPreview);
+            
+            // Logo click handler as a backup to the inline onclick
+            veroLogo.addEventListener('click', testVerification);
             
             // SMS button click handler
             smsButton.addEventListener('click', function() {
