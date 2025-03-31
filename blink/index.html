@@ -286,9 +286,7 @@
                     qrCode.addEventListener('click', () => {
                         qrSection.style.display = 'none';
                         textSection.style.display = 'block';
-                        if (sessionKey) {
-                            startBlinking(sessionKey, blinkRate);
-                        }
+                        // Don't auto-start blinking, let user click the button
                     });
                 }
             } else {
@@ -296,13 +294,7 @@
                 if (qrSection) qrSection.style.display = 'none';
                 if (textSection) textSection.style.display = 'block';
                 
-                // If session key is provided in URL, start blinking automatically
-                if (sessionKey) {
-                    // Start after a short delay to ensure page is fully loaded
-                    setTimeout(() => {
-                        startBlinking(sessionKey, blinkRate);
-                    }, 300);
-                }
+                // No longer auto-starting the blink sequence
             }
 
             // Start button click handler
