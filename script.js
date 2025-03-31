@@ -254,7 +254,7 @@ window.addEventListener('load', () => {
 
 // --- Configuration ---
 // IMPORTANT: Replace this with the actual URL of your Vero Blink page
-const VERO_BLINK_BASE_URL = 'https://your-domain.com/verify-blink'; // MODIFY THIS
+const VERO_BLINK_BASE_URL = 'https://vero.zeroth.technology/blink'; // MODIFY THIS
 // --- End Configuration ---
 
 // --- Functions ---

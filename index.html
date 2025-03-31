@@ -7,6 +7,38 @@
     <title>Vero - Configure Session</title>
     <!-- Stylesheet reference -->
     <link rel="stylesheet" href="./style.css">
+    <!-- Additional inline styles -->
+    <style>
+        .inline-fields {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px; /* Adds space between the two fields */
+            width: 100%;
+        }
+        
+        .field-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+        }
+        
+        .compact-select {
+            width: 100%;
+            font-family: inherit;
+            font-size: inherit;
+            height: 45px; /* Match the height of the session key input */
+            appearance: auto; /* Keep the dropdown arrow */
+        }
+        
+        
+        /* Ensure the input field and the selects have the same width */
+        #session-key, .inline-fields {
+            width: 100%;
+            max-width: 400px; /* Set a maximum width if needed */
+        }
+    </style>
 </head>
 <body>
     <!-- Main container -->
@@ -25,14 +57,31 @@
                 <input type="text" id="session-key" class="input-field" placeholder="Enter 5-character hex code" maxlength="5">
             </div>
 
-            <div>
-                <label for="blink-rate">Blink Rate (ms):</label>
-                <select id="blink-rate" class="input-field" name="blinkRate">
-                    <option value="100">100 ms</option>
-                    <option value="200" selected>200 ms</option>
-                    <option value="300">300 ms</option>
-                </select>
+            <div class="inline-fields">
+                <div class="field-group">
+                    <label for="blink-rate">Blink Rate (ms):</label>
+                    <select id="blink-rate" class="input-field compact-select" name="blinkRate">
+                        <option value="100">100 ms</option>
+                        <option value="200" selected>200 ms</option>
+                        <option value="300">300 ms</option>
+                    </select>
+                </div>
+                
+                <div class="field-group">
+                    <label for="key-type">Key Type:</label>
+                    <select id="key-type" class="input-field compact-select" name="keyType">
+                        <option value="s" selected>Session Key</option>
+                        <option value="m">Multiplier</option>
+                    </select>
+                </div>
             </div>
+            
+            <!-- Add URL preview section -->
+            <div style="margin-top: 15px; margin-bottom: 15px;">
+                <p><strong>Verification URL:</strong></p>
+                <p id="verification-url-preview">https://vero.zeroth.technology/blink?key=XXXXX,blink_rate=200,type=s</p>
+            </div>
+            
             <button id="send-session-button" class="btn btn-primary">Send Session Key</button>
         </div>
 
@@ -52,13 +101,31 @@
             // Get references to elements
             const sessionKeyInput = document.getElementById('session-key');
             const blinkRateSelect = document.getElementById('blink-rate');
+            const keyTypeSelect = document.getElementById('key-type');
             const sendButton = document.getElementById('send-session-button');
+            const urlPreview = document.getElementById('verification-url-preview');
+            
+            // Function to update the URL preview
+            function updateUrlPreview() {
+                const sessionKey = sessionKeyInput.value.trim() || 'XXXXX';
+                const blinkRate = blinkRateSelect.value;
+                const keyType = keyTypeSelect.value;
+                const verificationUrl = `https://vero.zeroth.technology/blink?key=${sessionKey},blink_rate=${blinkRate},type=${keyType}`;
+                urlPreview.textContent = verificationUrl;
+            }
+            
+            // Update preview on page load and when inputs change
+            updateUrlPreview();
+            sessionKeyInput.addEventListener('input', updateUrlPreview);
+            blinkRateSelect.addEventListener('change', updateUrlPreview);
+            keyTypeSelect.addEventListener('change', updateUrlPreview);
 
             // Add click event to the Send button
             sendButton.addEventListener('click', function() {
                 // Get input values
                 const sessionKey = sessionKeyInput.value.trim();
                 const blinkRate = blinkRateSelect.value;
+                const keyType = keyTypeSelect.value;
 
                 // A) Validate session key (5 character hex code)
                 if (!sessionKey) {
@@ -75,11 +142,10 @@
                 }
 
                 // B) Generate the verification URL in the required format
-                // Note: The format is https://vero.zeroth.technology/blink?key=SESSION_KEY,blink_rate=BLINK_RATE
-                const verificationUrl = `https://vero.zeroth.technology/blink?key=${sessionKey},blink_rate=${blinkRate}`;
+                const verificationUrl = `https://vero.zeroth.technology/blink?key=${sessionKey},blink_rate=${blinkRate},type=${keyType}`;
 
                 // C) Navigate to the send page with parameters
-                window.location.href = `send/index.html?sessionKey=${encodeURIComponent(sessionKey)}&blinkRate=${encodeURIComponent(blinkRate)}&verificationUrl=${encodeURIComponent(verificationUrl)}`;
+                window.location.href = `send/index.html?sessionKey=${encodeURIComponent(sessionKey)}&blinkRate=${encodeURIComponent(blinkRate)}&keyType=${encodeURIComponent(keyType)}&verificationUrl=${encodeURIComponent(verificationUrl)}`;
             });
         });
     </script>

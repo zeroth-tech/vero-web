@@ -19,13 +19,17 @@
             <!-- SMS Section -->
             <section class="send-method">
                 <h3>Send via SMS</h3>
-                <p>Enter the recipient's phone number.</p>
-                <div>
-                    <label for="sms-number">Phone Number:</label>
-                    <input type="text" id="sms-number" class="input-field" placeholder="+15555551212">
+                <p>Opens your SMS app with the verification link pre-populated.</p>
+                <a href="#" id="sms-link" class="btn btn-primary" target="_blank">Open SMS App</a>
+                <p class="note"><small>You'll need to enter the recipient's phone number in your SMS app.</small></p>
+                
+                <!-- Display session info -->
+                <div class="session-info">
+                    <p><strong>Session Key:</strong> <span id="display-session-key">Not Provided</span></p>
+                    <p><strong>Blink Rate:</strong> <span id="display-blink-rate">Not Provided</span></p>
+                    <p><strong>Verification URL:</strong> <a id="display-verification-url" href="#" target="_blank">Not Generated</a></p>
+                    <p class="note"><small>(Click the URL above to test it directly)</small></p>
                 </div>
-                <a href="#" id="sms-link" class="btn btn-secondary" target="_blank">Send SMS</a>
-                <p class="note"><small>Opens your default SMS app.</small></p>
             </section>
 
             <hr class="separator">
@@ -33,19 +37,9 @@
             <!-- Email Section -->
             <section class="send-method">
                 <h3>Send via Email</h3>
-                <p>Requires server-side setup (e.g., Express/Nodemailer).</p>
-                <form id="email-form" action="/send-email" method="POST">
-                     <div>
-                        <label for="email-address">Email Address:</label>
-                        <input type="email" id="email-address" class="input-field" name="email" required placeholder="recipient@example.com">
-                    </div>
-                    <!-- Hidden fields populated by JS using URL params -->
-                    <input type="hidden" id="email-session-key" name="sessionKey">
-                    <input type="hidden" id="email-blink-rate" name="blinkRate">
-                    <input type="hidden" id="email-verification-url" name="verificationUrl">
-                    <button type="submit" class="btn btn-primary">Send Email</button>
-                </form>
-                <p class="note"><small>Actual sending requires backend logic at /send-email.</small></p>
+                <p>Opens your email app with the verification link pre-populated.</p>
+                <a href="#" id="email-link" class="btn btn-primary" target="_blank">Open Email App</a>
+                <p class="note"><small>You'll need to enter the recipient's email address in your email app.</small></p>
            </section>
         </div> <!-- /sending-options -->
 
@@ -56,7 +50,7 @@
 
     </div> <!-- /container -->
 
-    <!-- JavaScript for this page - simplified -->
+    <!-- JavaScript for this page - modified -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // --- Get URL parameters ---
@@ -70,54 +64,50 @@
             // Get the session key and blink rate from URL parameters
             const sessionKey = getUrlParameter('sessionKey');
             const blinkRate = getUrlParameter('blinkRate');
-            // Get the pre-generated verification URL from parameters
-            const verificationUrl = getUrlParameter('verificationUrl');
+            // Get or construct verification URL
+            let verificationUrl = getUrlParameter('verificationUrl');
+            
+            // If the verificationUrl isn't provided or doesn't match expected format,
+            // construct it using the session key and blink rate
+            if (!verificationUrl || !verificationUrl.includes('vero.zeroth.technology')) {
+                verificationUrl = `https://vero.zeroth.technology?key=${sessionKey}&rate=${blinkRate}`;
+            }
 
             // Display received parameters
             document.getElementById('display-session-key').textContent = sessionKey || 'Not Provided';
             document.getElementById('display-blink-rate').textContent = blinkRate || 'Not Provided';
-
-            // Set up hidden form fields
-            document.getElementById('email-session-key').value = sessionKey;
-            document.getElementById('email-blink-rate').value = blinkRate;
-            document.getElementById('email-verification-url').value = verificationUrl;
+            
+            // Display the verification URL and make it clickable
+            const displayUrlElement = document.getElementById('display-verification-url');
+            if (displayUrlElement) {
+                displayUrlElement.textContent = verificationUrl || 'Not Generated';
+                displayUrlElement.href = verificationUrl || '#';
+            }
 
             // --- SMS Link functionality ---
             const smsLink = document.getElementById('sms-link');
-            const smsNumberInput = document.getElementById('sms-number');
+            if (smsLink) {
+                // Create SMS link with just the message body
+                const smsBody = `Click this link to verify liveness with Vero: ${verificationUrl}`;
+                smsLink.href = `sms:?&body=${encodeURIComponent(smsBody)}`;
+                
+                console.log('SMS Link created with body only');
+                console.log('Verification URL:', verificationUrl);
+                console.log('Full SMS href:', smsLink.href);
+            }
 
-            // Update SMS link when phone number changes
-            smsNumberInput.addEventListener('input', function() {
-                const phoneNumber = this.value.trim();
+            // --- Email Link functionality ---
+            const emailLink = document.getElementById('email-link');
+            if (emailLink) {
+                // Create email link with subject and body
+                const emailSubject = 'Vero Authentication Link';
+                const emailBody = `Click this link to verify liveness with Vero: ${verificationUrl}`;
+                emailLink.href = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
                 
-                // Basic validation
-                if (phoneNumber && /^\+?[0-9\s\-()]+$/.test(phoneNumber) && verificationUrl) {
-                    smsLink.style.opacity = '1';
-                    smsLink.style.cursor = 'pointer';
-                    // Create SMS link with the verification URL
-                    const smsBody = `Click this link to verify liveness with Vero: ${verificationUrl}`;
-                    smsLink.href = `sms:${phoneNumber.replace(/[\s\-()]/g, '')}?body=${encodeURIComponent(smsBody)}`;
-                } else {
-                    smsLink.removeAttribute('href');
-                    smsLink.style.opacity = '0.6';
-                    smsLink.style.cursor = 'not-allowed';
-                }
-            });
-
-            // --- Email form handling ---
-            document.getElementById('email-form').addEventListener('submit', function(event) {
-                const emailAddress = document.getElementById('email-address').value.trim();
-                
-                if (!emailAddress) {
-                    event.preventDefault();
-                    alert('Please enter a valid email address.');
-                    return;
-                }
-                
-                // Form will submit naturally to the backend endpoint
-                console.log('Email will be sent to:', emailAddress);
-                console.log('With verification URL:', verificationUrl);
-            });
+                console.log('Email Link created');
+                console.log('Verification URL:', verificationUrl);
+                console.log('Full Email href:', emailLink.href);
+            }
         });
     </script>
 </body>
