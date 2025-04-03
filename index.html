@@ -8,14 +8,18 @@
     <!-- Stylesheet reference -->
     <link rel="stylesheet" href="./style.css">
     <style>
-        /* Add cursor pointer to logo for better UX */
-        .vero-logo {
+        /* Add cursor pointer to logo and URL preview for better UX */
+        .vero-logo, #verification-url-preview {
             cursor: pointer;
             transition: transform 0.2s ease;
         }
         
         .vero-logo:hover {
             transform: scale(1.05);
+        }
+        
+        #verification-url-preview:hover {
+            color: #666; /* Slightly darken URL on hover */
         }
     </style>
 </head>
@@ -65,10 +69,11 @@
         
         <!-- URL preview section -->
         <div style="margin-top: 15px; margin-bottom: 15px; max-width: 300px; margin-left: auto; margin-right: auto;">
-            <p id="verification-url-preview-label"><strong>Verification URL:</strong></p>
+            <p id="verification-url-preview-label"><strong>Verification URL:</strong> (click to copy)</p>
             <p id="verification-url-preview">https://vero.zeroth.technology/blink?key=XXXXX,blink_rate=200,type=s</p>
+            <p id="copy-feedback" style="font-size: 12px; color: #4a86e8; height: 14px; margin-top: 5px;"></p>
         </div>
-    
+        
         
         <!-- Buttons section -->
         <div class="button-container">
@@ -144,7 +149,11 @@
             const smsButton = document.getElementById('sms-button');
             const emailButton = document.getElementById('email-button');
             const urlPreview = document.getElementById('verification-url-preview');
+            const urlPreviewLabel = document.getElementById('verification-url-preview-label');
             const veroLogo = document.getElementById('vero-logo');
+            const copyFeedback = document.getElementById('copy-feedback');
+            
+            let currentVerificationUrl = ''; // Store the URL without the <br>
             
             // ==============================================
             // Core Functions
@@ -153,7 +162,7 @@
             /**
              * Updates the verification URL preview with current settings
              * Adds a line break for better display
-             * @returns {string} The complete verification URL without line breaks
+             * Updates the global variable for copying
              */
             function updateUrlPreview() {
                 const sessionKey = sessionKeyInput.value.trim() || 'XXXXX';
@@ -167,8 +176,8 @@
                 // Update the preview with a line break
                 urlPreview.innerHTML = baseUrl + '<br />' + params;
                 
-                // Return the complete URL (without line break) for use in sharing
-                return baseUrl + params;
+                // Store the full URL (without line break) for copying
+                currentVerificationUrl = baseUrl + params;
             }
             
             /**
@@ -194,6 +203,32 @@
                 return true;
             }
             
+            /**
+             * Copies the current verification URL to the clipboard
+             */
+            function copyUrlToClipboard() {
+                // Check if clipboard API is available
+                if (!navigator.clipboard) {
+                    alert('Clipboard API not available in this browser.');
+                    return;
+                }
+                
+                navigator.clipboard.writeText(currentVerificationUrl).then(function() {
+                    // Provide feedback to the user
+                    copyFeedback.textContent = 'URL copied to clipboard!';
+                    // Clear the feedback message after a short delay
+                    setTimeout(() => {
+                        copyFeedback.textContent = '';
+                    }, 2000); 
+                }, function(err) {
+                    console.error('Could not copy text: ', err);
+                    copyFeedback.textContent = 'Failed to copy URL.';
+                    setTimeout(() => {
+                        copyFeedback.textContent = '';
+                    }, 2000);
+                });
+            }
+            
             // ==============================================
             // Event Listeners
             // ==============================================
@@ -203,15 +238,18 @@
             blinkRateSelect.addEventListener('change', updateUrlPreview);
             keyTypeSelect.addEventListener('change', updateUrlPreview);
             
-            // Logo click handler as a backup to the inline onclick
-            veroLogo.addEventListener('click', testVerification);
+            // Logo click handler (using inline onclick for reliability)
+            // veroLogo.addEventListener('click', testVerification); // Kept inline onclick
+            
+            // URL preview click handler for copying
+            urlPreview.addEventListener('click', copyUrlToClipboard);
             
             // SMS button click handler
             smsButton.addEventListener('click', function() {
                 if (!validateSessionKey()) return;
                 
-                const verificationUrl = updateUrlPreview();
-                const smsBody = `Click this link to verify liveness with Vero: ${verificationUrl}`;
+                updateUrlPreview(); // Ensure URL is up-to-date
+                const smsBody = `Click this link to verify liveness with Vero: ${currentVerificationUrl}`;
                 const smsHref = `sms:?&body=${encodeURIComponent(smsBody)}`;
                 
                 window.open(smsHref, '_blank');
@@ -221,9 +259,9 @@
             emailButton.addEventListener('click', function() {
                 if (!validateSessionKey()) return;
                 
-                const verificationUrl = updateUrlPreview();
+                updateUrlPreview(); // Ensure URL is up-to-date
                 const emailSubject = 'Vero Authentication Link';
-                const emailBody = `Click this link to verify liveness with Vero: ${verificationUrl}`;
+                const emailBody = `Click this link to verify liveness with Vero: ${currentVerificationUrl}`;
                 const emailHref = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
                 
                 window.open(emailHref, '_blank');
@@ -231,6 +269,11 @@
             
             // Initialize the URL preview on page load
             updateUrlPreview();
+            
+            // Update URL preview label text
+            if (urlPreviewLabel) {
+                urlPreviewLabel.innerHTML = '<strong>Verification URL:</strong> (click URL to copy)';
+            }
         });
     </script>
 </body>
