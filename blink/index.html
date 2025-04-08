@@ -85,11 +85,10 @@
          * @returns {string} Sequence of G (green/1), B (blue/0), _ (delimiter), R (terminator)
          */
         function binaryToBlinkSequence(binary) {
-            let sequence = '';
+            let sequence = 'R_'; // Begin with a terminator
             for (let bit of binary) {
                 sequence += bit === '1' ? 'G_' : 'B_';
             }
-            sequence += 'R'; // Add terminator
             return sequence;
         }
 
@@ -167,10 +166,10 @@
          */
         function executeBlinkSequence(sequence, rate = DEFAULT_BLINK_RATE) {
             let currentIndex = 0;
-            // Color mapping for sequence characters - Brighter Red and Blue
+            // Color mapping for sequence characters - Brighter Red and Blue (less red in blue)
             const colors = {
                 'G': '#00ff00', // Green represents binary 1 (remains pure green)
-                'B': '#6666FF', // Brighter Blue (added some red/green)
+                'B': '#4040FF', // Mostly Blue, with some white added for brightness
                 'R': '#FF6666', // Brighter Red (added some green/blue, more salmon/pink)
                 '_': '#000000'  // Black serves as visual delimiter
             };
