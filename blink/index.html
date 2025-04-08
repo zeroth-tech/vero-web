@@ -167,11 +167,11 @@
          */
         function executeBlinkSequence(sequence, rate = DEFAULT_BLINK_RATE) {
             let currentIndex = 0;
-            // Color mapping for sequence characters
+            // Color mapping for sequence characters - Brighter Red and Blue
             const colors = {
-                'G': '#00ff00', // Green represents binary 1
-                'B': '#0000ff', // Blue represents binary 0
-                'R': '#ff0000', // Red marks sequence termination
+                'G': '#00ff00', // Green represents binary 1 (remains pure green)
+                'B': '#6666FF', // Brighter Blue (added some red/green)
+                'R': '#FF6666', // Brighter Red (added some green/blue, more salmon/pink)
                 '_': '#000000'  // Black serves as visual delimiter
             };
 

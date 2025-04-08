@@ -45,8 +45,8 @@
                     <td style="width: 50%; padding-right: 10px;">
                         <label for="blink-rate">Blink Rate:</label>
                         <select id="blink-rate" class="compact-select" name="blinkRate">
-                            <option value="100">100 ms</option>
-                            <option value="200" selected>200 ms</option>
+                            <option value="100" selected>100 ms</option>
+                            <option value="200">200 ms</option>
                             <option value="300">300 ms</option>
                         </select>
                     </td>
@@ -194,8 +194,8 @@
                 }
                 
                 // Check if the key is 6 characters and a valid hex code
-                if (sessionKey.length !== 6 || !/^[0-9A-Fa-f]{6}$/.test(sessionKey)) {
-                    alert('Session key must be a 6-character hexadecimal code (0-9, A-F).');
+                if (!/^[0-9A-Fa-f]{6}$/.test(sessionKey)) {
+                    alert('Session key must be a hexadecimal code (0-9, A-F).');
                     sessionKeyInput.focus();
                     return false;
                 }
