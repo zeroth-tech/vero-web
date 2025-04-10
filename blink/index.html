@@ -28,6 +28,11 @@
             <br />
             <!-- Blink controls -->
             <button class="btn btn-primary" id="start-btn">Start Blinking</button> <br />
+            <!-- Brightness Instruction -->
+            <p class="information-text" style="margin-top: 15px;">
+                Please increase your screen's brightness to maximum for best results.
+                <br />(You may need to manually adjust this in your device settings).
+            </p>
             <br />
         </div>
         <!-- Stop button (hidden by default) -->
@@ -168,9 +173,9 @@
             let currentIndex = 0;
             // Color mapping for sequence characters - Brighter Red and Blue (less red in blue)
             const colors = {
-                'G': '#00ff00', // Green represents binary 1 (remains pure green)
-                'B': '#4040FF', // Mostly Blue, with some white added for brightness
-                'R': '#FF6666', // Brighter Red (added some green/blue, more salmon/pink)
+                'G': '#00FF00', // Green represents binary 1 (remains pure green)
+                'B': '#0000FF', // Mostly Blue, with some white added for brightness
+                'R': '#FF0000', // Brighter Red (added some green/blue, more salmon/pink)
                 '_': '#000000'  // Black serves as visual delimiter
             };
 
