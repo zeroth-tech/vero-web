@@ -26,16 +26,28 @@
                 <p class="information-text"> Click the button below then hold your phone near the side of your face as if you were making a phone call. </p>
             </div>
             <br />
-            <!-- Blink controls -->
-            <button class="btn btn-primary" id="start-btn">Start Blinking</button> <br />
+            <!-- Blink controls & Share Button -->
+            <div class="button-row" style="display: flex; justify-content: center; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <button class="btn btn-primary" id="start-btn">Start Blinking</button>
+                <button class="btn" id="share-btn" style="background-color: grey; color: white; border: none; padding: 10px 15px; cursor: pointer;">Share Verification Link</button>
+            </div>
+            <br />
             <!-- Brightness Instruction -->
-            <p class="information-text" style="margin-top: 15px; color: grey; font-style: normal; max-width: 250px; margin-left: auto; margin-right: auto;">
-                Please increase your screen's brightness to maximum in your device settings for best results.
+            <p class="information-text" style="margin-top: 15px; color: grey; font-style: normal; max-width: 300px; margin-left: auto; margin-right: auto;">
+                Please increase your screen's brightness to maximum for best results.
+                <br />(You may need to manually adjust this in your device settings).
             </p>
             <br />
         </div>
         <!-- Stop button (hidden by default) -->
         <button class="btn btn-primary" id="stop-btn" style="display: none;">Stop Blinking</button>
+    </div>
+
+    <!-- Share QR Code Section (hidden by default) -->
+    <div id="share-qr-section" class="container" style="display: none; margin-top: 20px; text-align: center; padding: 15px; background-color: #f8f8f8; border-radius: 8px; max-width: 300px; margin-left: auto; margin-right: auto;">
+        <h3 style="margin-top: 0; margin-bottom: 10px;">Scan to Share Verification</h3>
+        <div id="share-qr-code" style="display: inline-block; margin-top: 10px; margin-bottom: 15px;"></div>
+        <button id="close-share-qr" class="btn" style="background-color: grey; color: white; border: none; padding: 8px 15px; cursor: pointer;">Close</button>
     </div>
 
     <!-- QR code section for desktop users (hidden by default) -->
@@ -173,8 +185,8 @@
             // Color mapping for sequence characters - Brighter Red and Blue (less red in blue)
             const colors = {
                 'G': '#00FF00', // Green represents binary 1 (remains pure green)
-                'B': '#0000FF', // Mostly Blue, with some white added for brightness
-                'R': '#FF0000', // Brighter Red (added some green/blue, more salmon/pink)
+                'B': '#0070FF', // Mostly Blue, with some white added for brightness
+                'R': '#FF2000', // Brighter Red (added some green/blue, more salmon/pink)
                 '_': '#000000'  // Black serves as visual delimiter
             };
 
@@ -217,6 +229,13 @@
                 if (textSection) textSection.style.display = 'none';
                 if (stopBtn) stopBtn.style.display = 'block';
                 
+                // Hide share QR section if open
+                const shareQrSection = document.getElementById('share-qr-section');
+                if (shareQrSection) {
+                    shareQrSection.style.display = 'none';
+                    document.getElementById('share-qr-code').innerHTML = ''; // Clear QR code
+                }
+                
                 executeBlinkSequence(sequence, rate);
             } catch (e) {
                 console.error("Error starting blink sequence:", e);
@@ -256,6 +275,10 @@
             const qrSection = document.getElementById('qr-section');
             const textSection = document.getElementById('text-section');
             const qrCode = document.getElementById('qr-code');
+            const shareBtn = document.getElementById('share-btn'); // New share button
+            const shareQrSection = document.getElementById('share-qr-section'); // New QR section
+            const shareQrCodeDiv = document.getElementById('share-qr-code'); // Div for share QR
+            const closeShareQrBtn = document.getElementById('close-share-qr'); // Close button for share QR
 
             // Get URL parameters using the enhanced function
             const params = getSessionParams();
@@ -280,7 +303,7 @@
                         width: 256,
                         height: 256,
                         colorDark: "#000000",
-                        colorLight: "#ffffff",
+                        colorLight: "#f6f6f6",
                         correctLevel: QRCode.CorrectLevel.H
                     });
 
@@ -314,6 +337,61 @@
             // Stop button click handler
             if (stopBtn) {
                 stopBtn.addEventListener('click', stopBlinking);
+            }
+
+            // Share button click handler
+            if (shareBtn) {
+                shareBtn.addEventListener('click', () => {
+                    const { sessionKey, blinkRate, keyType } = getSessionParams(); // Re-fetch params
+
+                    if (!sessionKey) {
+                        alert('Session key is missing. Cannot generate share link.');
+                        return;
+                    }
+
+                    if (typeof QRCode === 'undefined') {
+                        alert('QR Code library not loaded.');
+                        return;
+                    }
+
+                    // Construct the verification URL
+                    const baseUrl = window.location.origin + '/verify/detect'; // Use origin + specific path
+                    const combinedQueryValue = `key=${sessionKey},blink_rate=${blinkRate},type=${keyType}`;
+                    const shareUrl = `${baseUrl}?${combinedQueryValue}`;
+
+                    console.log("Generating QR code for:", shareUrl);
+
+                    // Clear previous QR code
+                    shareQrCodeDiv.innerHTML = '';
+
+                    // Generate new QR code
+                    try {
+                        new QRCode(shareQrCodeDiv, {
+                            text: shareUrl,
+                            width: 128, // Smaller QR code
+                            height: 128,
+                            colorDark: "#000000",
+                            colorLight: "#f6f6f6",
+                            correctLevel: QRCode.CorrectLevel.M // Medium correction level is fine here
+                        });
+
+                        // Show the QR code section
+                        if (shareQrSection) {
+                            shareQrSection.style.display = 'block';
+                        }
+                    } catch (e) {
+                        console.error("Error generating QR code:", e);
+                        alert("Failed to generate QR code.");
+                    }
+                });
+            }
+
+            // Close Share QR button click handler
+            if (closeShareQrBtn && shareQrSection) {
+                closeShareQrBtn.addEventListener('click', () => {
+                    shareQrSection.style.display = 'none';
+                    shareQrCodeDiv.innerHTML = ''; // Clear QR code when closing
+                });
             }
         });
     </script>

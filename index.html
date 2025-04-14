@@ -28,8 +28,7 @@
     <div class="container">
         <!-- Header section -->
         <h1>Welcome to</h1>
-        <img src="assets/vero-logo.svg" alt="Vero Logo" class="vero-logo" id="vero-logo" onclick="testVerification()"/>
-        <p>Real-time peer-to-peer authentication</p>
+        <img src="assets/vero-text.svg" alt="Vero Logo" class="vero-logo" id="vero-logo" onclick="testVerification()"/>
 
         <!-- Configuration Section -->
         <h2 class="info-heading">Configure Liveness <br /> Verification</h2>
@@ -38,7 +37,7 @@
                 <tr>
                     <td colspan="2">
                         <label for="session-key">Session Key:</label>
-                        <input type="text" id="session-key" class="input-field" placeholder="Enter 6-character hex code" maxlength="6">
+                        <input type="text" id="session-key" class="input-field" placeholder="Enter 4-6 character hex code" maxlength="6">
                     </td>
                 </tr>
                 <tr>
@@ -68,7 +67,7 @@
         </div>
         
         <!-- URL preview section -->
-        <div style="margin-top: 15px; margin-bottom: 15px; max-width: 300px; margin-left: auto; margin-right: auto;">
+        <div style="margin-top: 5px; margin-bottom: 5px; max-width: 300px; margin-left: auto; margin-right: auto;">
             <p id="verification-url-preview-label"><strong>Verification URL:</strong> (click to copy)</p>
             <p id="verification-url-preview">https://vero.zeroth.technology/blink?key=XXXXX,blink_rate=200,type=s</p>
             <p id="copy-feedback" style="font-size: 12px; color: #4a86e8; height: 14px; margin-top: 5px;"></p>
@@ -119,9 +118,9 @@
                 return;
             }
             
-            // Check if the key is 6 characters and a valid hex code
-            if (sessionKey.length !== 6 || !/^[0-9A-Fa-f]{6}$/.test(sessionKey)) {
-                alert('Session key must be a 6-character hexadecimal code (0-9, A-F).');
+            // Check if the key is 4, 5, or 6 characters and a valid hex code
+            if (!/^[0-9A-Fa-f]{4,6}$/.test(sessionKey)) {
+                alert('Session key must be a 4, 5, or 6 character hexadecimal code (0-9, A-F).');
                 sessionKeyInput.focus();
                 return;
             }
@@ -193,9 +192,9 @@
                     return false;
                 }
                 
-                // Check if the key is 6 characters and a valid hex code
-                if (!/^[0-9A-Fa-f]{6}$/.test(sessionKey)) {
-                    alert('Session key must be a hexadecimal code (0-9, A-F).');
+                // Check if the key is a valid hex code
+                if (!/^[0-9A-Fa-f]{4,6}$/.test(sessionKey)) {
+                    alert('Session key must be a 4-6 character hexadecimal code (0-9, A-F).');
                     sessionKeyInput.focus();
                     return false;
                 }
