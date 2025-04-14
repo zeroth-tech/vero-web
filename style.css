@@ -236,6 +236,55 @@ label[for="session-key"] {
   }
 }
 
+/* ==============================================
+   Modal Styles
+   ============================================== */
+.modal {
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+  display: flex; /* Use flexbox for centering */
+  align-items: center; /* Vertical center */
+  justify-content: center; /* Horizontal center */
+}
+
+.modal-content {
+  background-color: #2a2a2a; /* Darker background for modal */
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #555;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 350px; /* Max width */
+  text-align: center;
+  position: relative;
+}
+
+.close-btn {
+  color: #aaa;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+  color: #fff; /* Brighter on hover */
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ==============================================
+   End Modal Styles
+   ============================================== */
+
 /* =============================================
    The following styles are kept for reference but are currently unused
    =============================================

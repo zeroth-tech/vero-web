@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vero Blink Sequence</title>
     <!-- Stylesheet and QR code library references -->
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
@@ -38,7 +38,7 @@
             </p>
             <br />
             <!-- Share Button moved here -->
-            <button class="btn" id="share-btn" style="background-color: grey; color: white; border: none; padding: 10px 15px; cursor: pointer; margin-top: 10px;">Share Verification Link</button>
+            <button class="btn btn-primary" id="share-btn" style="margin-top: 10px;">Share Verification Link</button>
             <br />
         </div>
         <!-- Stop button (hidden by default) -->
@@ -353,7 +353,7 @@
                     }
 
                     // Construct the verification URL
-                    const baseUrl = window.location.origin + '/verify/detect'; // Use origin + specific path
+                    const baseUrl = 'zeroth-vero.replit.app/verify/detect'; // Use origin + specific path
                     const combinedQueryValue = `key=${sessionKey},blink_rate=${blinkRate},type=${keyType}`;
                     const shareUrl = `${baseUrl}?${combinedQueryValue}`;
 
