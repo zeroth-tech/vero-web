@@ -1,6 +1,6 @@
-# Vero Blink Sequence Website
-
-A simple web application that converts hexadecimal session keys into visual blink sequences.
+# Vero Blink Sequence Website at VERO.ZEROTH.TECHNOLOGY. 
+STILL ACTIVE
+A simple demo web application that converts hexadecimal session keys into visual blink sequences. 
 
 ## Features
 
